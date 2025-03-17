@@ -7,7 +7,15 @@ project(tima)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+
+
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  std_msgs
+  tf
+  turtlesim
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -103,17 +111,36 @@ catkin_package(
 #  LIBRARIES tima
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
+
 )
 
 ###########
 ## Build ##
 ###########
 
+set(TALKER_NODE_NAME talker_cpp)
+set(TALKER_NODE_SRC  scripts_test/cpp_test/publisher.cpp)
+
+add_executable(${TALKER_NODE_NAME} ${TALKER_NODE_SRC})
+add_dependencies(${TALKER_NODE_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${TALKER_NODE_NAME} ${catkin_LIBRARIES} )
+
+set(LISTENER_NODE_NAME listener_cpp)
+set(LISTENER_NODE_SRC  scripts_test/cpp_test/subscriber.cpp)
+
+add_executable(${LISTENER_NODE_NAME} ${LISTENER_NODE_SRC})
+add_dependencies(${LISTENER_NODE_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${LISTENER_NODE_NAME} ${catkin_LIBRARIES} )
+
+
+
+
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-# ${catkin_INCLUDE_DIRS}
+ ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
